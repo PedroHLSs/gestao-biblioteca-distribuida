@@ -24,7 +24,6 @@ public class ServiceGestor {
     // Lista de URLs das bibliotecas disponíveis
     private List<String> bibliotecaUrls;
 
-    // Índice atômico para rastrear a próxima biblioteca a ser usada
     private AtomicInteger currentBibliotecaIndex;
 
     // Heath Controll instancia
@@ -75,7 +74,6 @@ public class ServiceGestor {
             }
         }
 
-        // Se todas as instâncias estiverem indisponíveis, retorna a primeira
         return bibliotecaUrls.get(0);
     }
 
@@ -85,7 +83,6 @@ public class ServiceGestor {
             instanciaHealth.registrarSucesso();
         }
     }
-    // registra falha e verifica se a instância deve entrar em quarentena
 
     private void registrarFalha(String url) {
         InstanciaHealth instanciaHealth = heatlhStatus.get(url);
@@ -112,7 +109,7 @@ public class ServiceGestor {
                 return response;
 
             } catch (ResourceAccessException e) {
-                System.out.println("Instância " + url + " não está acessível: " + e.getMessage() +
+                System.out.println("Instância " + url + " não está disponivel: " + e.getMessage() +
                         ". Tentando próxima instância...");
                 registrarFalha(url);
                 ultimaExcecao = e;
@@ -128,15 +125,15 @@ public class ServiceGestor {
                 throw e;
 
             } catch (Exception e) {
-                System.out.println("Erro inesperado ao acessar " + url + ": " + e.getMessage());
+                System.out.println("Erro ao acessar " + url + ": " + e.getMessage());
                 registrarFalha(url);
                 ultimaExcecao = e;
             }
         }
 
-        System.out.println("🚨 Todas as " + tentativas + " instâncias de Plantas falharam!");
+        System.out.println("Todas as " + tentativas + " instâncias falharam!");
         throw new RuntimeException(
-                "Todas as instâncias do Serviço Plantas estão indisponíveis",
+                "Todas as instâncias do Serviço estão indisponíveis",
                 ultimaExcecao);
     }
 }

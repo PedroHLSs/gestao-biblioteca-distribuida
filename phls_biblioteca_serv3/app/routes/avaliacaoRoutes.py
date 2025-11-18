@@ -14,7 +14,6 @@ def create_avaliacao():
 
 @avaliacoes_bp.route("/avaliacoes", methods=["GET"])
 def get_avaliacoes():
-    # Fail fast if DB is not initialized
     if getattr(mongo, 'db', None) is None:
         return jsonify({"error": "Banco de dados não inicializado. Verifique a configuração do MongoDB."}), 500
     avaliacoes = mongo.db.avaliacoes.find()

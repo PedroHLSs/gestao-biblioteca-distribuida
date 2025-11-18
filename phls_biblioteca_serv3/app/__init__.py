@@ -4,18 +4,12 @@ from app.database import init_app as init_db
 
 def create_app():
     app = Flask(__name__)
-    
-    # Carrega configurações
+
     app.config.from_object(Config)
-    
-    # Inicializa a conexão com o MongoDB
-    # Isto garante que `mongo.db` não seja None nas rotas
     init_db(app)
     
-    # Configurações adicionais
     app.config['JSON_AS_ASCII'] = False
-    
-    # ✅ ROTA RAIZ - Corrige o erro 404
+
     @app.route('/', methods=['GET'])
     def index():
         return jsonify({
@@ -42,7 +36,6 @@ def create_app():
             }
         }), 200
     
-    # Registra as rotas (blueprints)
     try:
         from app.routes.avaliacaoRoutes import avaliacoes_bp
         from app.routes.sugestaoRoutes import sugestoes_bp
@@ -50,12 +43,11 @@ def create_app():
         app.register_blueprint(avaliacoes_bp, url_prefix='/api')
         app.register_blueprint(sugestoes_bp, url_prefix='/api')
         
-        print("✅ Rotas registradas com sucesso!")
-        print("📍 Acesse: http://localhost:8084/")
-        print("📍 Avaliações: http://localhost:8084/api/avaliacoes")
-        print("📍 Sugestões: http://localhost:8084/api/sugestoes")
+        print("http://localhost:8084/")
+        print("Avaliações: http://localhost:8084/api/avaliacoes")
+        print("Sugestões: http://localhost:8084/api/sugestoes")
         
     except Exception as e:
-        print(f"❌ Erro ao registrar rotas: {e}")
+        print(f"Erro ao registrar rotas: {e}")
     
     return app
